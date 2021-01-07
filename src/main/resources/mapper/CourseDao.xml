@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yikao.demo.dao.CourseDao">
+
+    <resultMap type="com.yikao.demo.entity.Course" id="CourseMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="courseTitle" column="course_title" jdbcType="VARCHAR"/>
+        <result property="courseIntroduction" column="course_Introduction" jdbcType="VARCHAR"/>
+        <result property="teacherName" column="teacher_name" jdbcType="VARCHAR"/>
+        <result property="courseImage" column="course_image" jdbcType="VARCHAR"/>
+        <result property="courseType" column="course_type" jdbcType="INTEGER"/>
+        <result property="createtime" column="createtime" jdbcType="TIMESTAMP"/>
+        <result property="updatetime" column="updatetime" jdbcType="TIMESTAMP"/>
+        <result property="private" column="private" jdbcType="INTEGER"/>
+        <result property="obj1" column="obj1" jdbcType="VARCHAR"/>
+        <result property="obj2" column="obj2" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="CourseMap">
+        select id,
+               user_id,
+               course_title,
+               course_Introduction,
+               teacher_name,
+               course_image,
+               course_type,
+               createtime,
+               updatetime,
+               private,
+               obj1,
+               obj2
+        from yikaodb.course
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="CourseMap">
+        select id,
+               user_id,
+               course_title,
+               course_Introduction,
+               teacher_name,
+               course_image,
+               course_type,
+               createtime,
+               updatetime,
+               private,
+               obj1,
+               obj2
+        from yikaodb.course limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="CourseMap">
+        select
+        id, user_id, course_title, course_Introduction, teacher_name, course_image, course_type, createtime, updatetime, private, obj1, obj2
+        from yikaodb.course
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="courseTitle != null and courseTitle != ''">
+                and course_title = #{courseTitle}
+            </if>
+            <if test="courseIntroduction != null and courseIntroduction != ''">
+                and course_Introduction = #{courseIntroduction}
+            </if>
+            <if test="teacherName != null and teacherName != ''">
+                and teacher_name = #{teacherName}
+            </if>
+            <if test="courseImage != null and courseImage != ''">
+                and course_image = #{courseImage}
+            </if>
+            <if test="courseType != null">
+                and course_type = #{courseType}
+            </if>
+            <if test="createtime != null">
+                and createtime = #{createtime}
+            </if>
+            <if test="updatetime != null">
+                and updatetime = #{updatetime}
+            </if>
+            <if test="private != null">
+                and private = #{private}
+            </if>
+            <if test="obj1 != null and obj1 != ''">
+                and obj1 = #{obj1}
+            </if>
+            <if test="obj2 != null and obj2 != ''">
+                and obj2 = #{obj2}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into yikaodb.course(user_id, course_title, course_Introduction, teacher_name, course_image, course_type, createtime, updatetime, private, obj1, obj2)
+        values (#{userId}, #{courseTitle}, #{courseIntroduction}, #{teacherName}, #{courseImage}, #{courseType}, #{createtime}, #{updatetime}, #{private}, #{obj1}, #{obj2})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into yikaodb.course(user_id, course_title, course_Introduction, teacher_name, course_image, course_type, createtime, updatetime, private, obj1, obj2)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.courseTitle}, #{entity.courseIntroduction}, #{entity.teacherName}, #{entity.courseImage}, #{entity.courseType}, #{entity.createtime},
+            #{entity.updatetime}, #{entity.private}, #{entity.obj1}, #{entity.obj2})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into yikaodb.course(user_id, course_title, course_Introduction, teacher_name, course_image, course_type, createtime, updatetime, private, obj1, obj2)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.courseTitle}, #{entity.courseIntroduction}, #{entity.teacherName}, #{entity.courseImage}, #{entity.courseType}, #{entity.createtime},
+            #{entity.updatetime}, #{entity.private}, #{entity.obj1}, #{entity.obj2})
+        </foreach>
+        on duplicate key update
+        user_id = values(user_id) , course_title = values(course_title) , course_Introduction = values(course_Introduction) , teacher_name = values(teacher_name) , course_image =
+        values(course_image) , course_type = values(course_type) , createtime = values(createtime) , updatetime = values(updatetime) , private = values(private) , obj1 =
+        values(obj1) , obj2 = values(obj2)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update yikaodb.course
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="courseTitle != null and courseTitle != ''">
+                course_title = #{courseTitle},
+            </if>
+            <if test="courseIntroduction != null and courseIntroduction != ''">
+                course_Introduction = #{courseIntroduction},
+            </if>
+            <if test="teacherName != null and teacherName != ''">
+                teacher_name = #{teacherName},
+            </if>
+            <if test="courseImage != null and courseImage != ''">
+                course_image = #{courseImage},
+            </if>
+            <if test="courseType != null">
+                course_type = #{courseType},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime},
+            </if>
+            <if test="updatetime != null">
+                updatetime = #{updatetime},
+            </if>
+            <if test="private != null">
+                private = #{private},
+            </if>
+            <if test="obj1 != null and obj1 != ''">
+                obj1 = #{obj1},
+            </if>
+            <if test="obj2 != null and obj2 != ''">
+                obj2 = #{obj2},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from yikaodb.course
+        where id = #{id}
+    </delete>
+
+</mapper>

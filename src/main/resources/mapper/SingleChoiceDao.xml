@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yikao.demo.dao.SingleChoiceDao">
+
+    <resultMap type="com.yikao.demo.entity.SingleChoice" id="SingleChoiceMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="courseId" column="course_id" jdbcType="INTEGER"/>
+        <result property="question" column="question" jdbcType="VARCHAR"/>
+        <result property="option1" column="option1" jdbcType="VARCHAR"/>
+        <result property="option2" column="option2" jdbcType="VARCHAR"/>
+        <result property="option3" column="option3" jdbcType="VARCHAR"/>
+        <result property="option4" column="option4" jdbcType="VARCHAR"/>
+        <result property="option5" column="option5" jdbcType="VARCHAR"/>
+        <result property="option6" column="option6" jdbcType="VARCHAR"/>
+        <result property="answer" column="answer" jdbcType="VARCHAR"/>
+        <result property="createtime" column="createtime" jdbcType="TIMESTAMP"/>
+        <result property="updatetime" column="updatetime" jdbcType="TIMESTAMP"/>
+        <result property="obj1" column="obj1" jdbcType="VARCHAR"/>
+        <result property="obj2" column="obj2" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SingleChoiceMap">
+        select id,
+               user_id,
+               course_id,
+               question,
+               option1,
+               option2,
+               option3,
+               option4,
+               option5,
+               option6,
+               answer,
+               createtime,
+               updatetime,
+               obj1,
+               obj2
+        from yikaodb.single_choice
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SingleChoiceMap">
+        select id,
+               user_id,
+               course_id,
+               question,
+               option1,
+               option2,
+               option3,
+               option4,
+               option5,
+               option6,
+               answer,
+               createtime,
+               updatetime,
+               obj1,
+               obj2
+        from yikaodb.single_choice limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SingleChoiceMap">
+        select
+        id, user_id, course_id, question, option1, option2, option3, option4, option5, option6, answer, createtime, updatetime, obj1, obj2
+        from yikaodb.single_choice
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="courseId != null">
+                and course_id = #{courseId}
+            </if>
+            <if test="question != null and question != ''">
+                and question = #{question}
+            </if>
+            <if test="option1 != null and option1 != ''">
+                and option1 = #{option1}
+            </if>
+            <if test="option2 != null and option2 != ''">
+                and option2 = #{option2}
+            </if>
+            <if test="option3 != null and option3 != ''">
+                and option3 = #{option3}
+            </if>
+            <if test="option4 != null and option4 != ''">
+                and option4 = #{option4}
+            </if>
+            <if test="option5 != null and option5 != ''">
+                and option5 = #{option5}
+            </if>
+            <if test="option6 != null and option6 != ''">
+                and option6 = #{option6}
+            </if>
+            <if test="answer != null and answer != ''">
+                and answer = #{answer}
+            </if>
+            <if test="createtime != null">
+                and createtime = #{createtime}
+            </if>
+            <if test="updatetime != null">
+                and updatetime = #{updatetime}
+            </if>
+            <if test="obj1 != null and obj1 != ''">
+                and obj1 = #{obj1}
+            </if>
+            <if test="obj2 != null and obj2 != ''">
+                and obj2 = #{obj2}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into yikaodb.single_choice(user_id, course_id, question, option1, option2, option3, option4, option5, option6, answer, createtime, updatetime, obj1, obj2)
+        values (#{userId}, #{courseId}, #{question}, #{option1}, #{option2}, #{option3}, #{option4}, #{option5}, #{option6}, #{answer}, #{createtime}, #{updatetime}, #{obj1},
+                #{obj2})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into yikaodb.single_choice(user_id, course_id, question, option1, option2, option3, option4, option5, option6, answer, createtime, updatetime, obj1, obj2)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.courseId}, #{entity.question}, #{entity.option1}, #{entity.option2}, #{entity.option3}, #{entity.option4}, #{entity.option5},
+            #{entity.option6}, #{entity.answer}, #{entity.createtime}, #{entity.updatetime}, #{entity.obj1}, #{entity.obj2})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into yikaodb.single_choice(user_id, course_id, question, option1, option2, option3, option4, option5, option6, answer, createtime, updatetime, obj1, obj2)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.courseId}, #{entity.question}, #{entity.option1}, #{entity.option2}, #{entity.option3}, #{entity.option4}, #{entity.option5},
+            #{entity.option6}, #{entity.answer}, #{entity.createtime}, #{entity.updatetime}, #{entity.obj1}, #{entity.obj2})
+        </foreach>
+        on duplicate key update
+        user_id = values(user_id) , course_id = values(course_id) , question = values(question) , option1 = values(option1) , option2 = values(option2) , option3 = values(option3)
+        , option4 = values(option4) , option5 = values(option5) , option6 = values(option6) , answer = values(answer) , createtime = values(createtime) , updatetime =
+        values(updatetime) , obj1 = values(obj1) , obj2 = values(obj2)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update yikaodb.single_choice
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="courseId != null">
+                course_id = #{courseId},
+            </if>
+            <if test="question != null and question != ''">
+                question = #{question},
+            </if>
+            <if test="option1 != null and option1 != ''">
+                option1 = #{option1},
+            </if>
+            <if test="option2 != null and option2 != ''">
+                option2 = #{option2},
+            </if>
+            <if test="option3 != null and option3 != ''">
+                option3 = #{option3},
+            </if>
+            <if test="option4 != null and option4 != ''">
+                option4 = #{option4},
+            </if>
+            <if test="option5 != null and option5 != ''">
+                option5 = #{option5},
+            </if>
+            <if test="option6 != null and option6 != ''">
+                option6 = #{option6},
+            </if>
+            <if test="answer != null and answer != ''">
+                answer = #{answer},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime},
+            </if>
+            <if test="updatetime != null">
+                updatetime = #{updatetime},
+            </if>
+            <if test="obj1 != null and obj1 != ''">
+                obj1 = #{obj1},
+            </if>
+            <if test="obj2 != null and obj2 != ''">
+                obj2 = #{obj2},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from yikaodb.single_choice
+        where id = #{id}
+    </delete>
+
+</mapper>

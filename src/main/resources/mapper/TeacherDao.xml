@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yikao.demo.dao.TeacherDao">
+
+    <resultMap type="com.yikao.demo.entity.Teacher" id="TeacherMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="nikename" column="nikename" jdbcType="VARCHAR"/>
+        <result property="school" column="school" jdbcType="VARCHAR"/>
+        <result property="adminCourse" column="admin_course" jdbcType="VARCHAR"/>
+        <result property="qq" column="qq" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="INTEGER"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="createtime" column="createtime" jdbcType="TIMESTAMP"/>
+        <result property="updatetime" column="updatetime" jdbcType="TIMESTAMP"/>
+        <result property="obj1" column="obj1" jdbcType="VARCHAR"/>
+        <result property="obj2" column="obj2" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TeacherMap">
+        select id,
+               username,
+               password,
+               nikename,
+               school,
+               admin_course,
+               qq,
+               phone,
+               email,
+               status,
+               createtime,
+               updatetime,
+               obj1,
+               obj2
+        from yikaodb.teacher
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TeacherMap">
+        select id,
+               username,
+               password,
+               nikename,
+               school,
+               admin_course,
+               qq,
+               phone,
+               email,
+               status,
+               createtime,
+               updatetime,
+               obj1,
+               obj2
+        from yikaodb.teacher limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TeacherMap">
+        select
+        id, username, password, nikename, school, admin_course, qq, phone, email, status, createtime, updatetime, obj1, obj2
+        from yikaodb.teacher
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="nikename != null and nikename != ''">
+                and nikename = #{nikename}
+            </if>
+            <if test="school != null and school != ''">
+                and school = #{school}
+            </if>
+            <if test="adminCourse != null and adminCourse != ''">
+                and admin_course = #{adminCourse}
+            </if>
+            <if test="qq != null and qq != ''">
+                and qq = #{qq}
+            </if>
+            <if test="phone != null">
+                and phone = #{phone}
+            </if>
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="createtime != null">
+                and createtime = #{createtime}
+            </if>
+            <if test="updatetime != null">
+                and updatetime = #{updatetime}
+            </if>
+            <if test="obj1 != null and obj1 != ''">
+                and obj1 = #{obj1}
+            </if>
+            <if test="obj2 != null and obj2 != ''">
+                and obj2 = #{obj2}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into yikaodb.teacher(username, password, nikename, school, admin_course, qq, phone, email, status, createtime, updatetime, obj1, obj2)
+        values (#{username}, #{password}, #{nikename}, #{school}, #{adminCourse}, #{qq}, #{phone}, #{email}, #{status}, #{createtime}, #{updatetime}, #{obj1}, #{obj2})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into yikaodb.teacher(username, password, nikename, school, admin_course, qq, phone, email, status, createtime, updatetime, obj1, obj2)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.username}, #{entity.password}, #{entity.nikename}, #{entity.school}, #{entity.adminCourse}, #{entity.qq}, #{entity.phone}, #{entity.email}, #{entity.status},
+            #{entity.createtime}, #{entity.updatetime}, #{entity.obj1}, #{entity.obj2})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into yikaodb.teacher(username, password, nikename, school, admin_course, qq, phone, email, status, createtime, updatetime, obj1, obj2)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.username}, #{entity.password}, #{entity.nikename}, #{entity.school}, #{entity.adminCourse}, #{entity.qq}, #{entity.phone}, #{entity.email}, #{entity.status},
+            #{entity.createtime}, #{entity.updatetime}, #{entity.obj1}, #{entity.obj2})
+        </foreach>
+        on duplicate key update
+        username = values(username) , password = values(password) , nikename = values(nikename) , school = values(school) , admin_course = values(admin_course) , qq = values(qq) ,
+        phone = values(phone) , email = values(email) , status = values(status) , createtime = values(createtime) , updatetime = values(updatetime) , obj1 = values(obj1) , obj2 =
+        values(obj2)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update yikaodb.teacher
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="nikename != null and nikename != ''">
+                nikename = #{nikename},
+            </if>
+            <if test="school != null and school != ''">
+                school = #{school},
+            </if>
+            <if test="adminCourse != null and adminCourse != ''">
+                admin_course = #{adminCourse},
+            </if>
+            <if test="qq != null and qq != ''">
+                qq = #{qq},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime},
+            </if>
+            <if test="updatetime != null">
+                updatetime = #{updatetime},
+            </if>
+            <if test="obj1 != null and obj1 != ''">
+                obj1 = #{obj1},
+            </if>
+            <if test="obj2 != null and obj2 != ''">
+                obj2 = #{obj2},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from yikaodb.teacher
+        where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yikao.demo.dao.MessageDao">
+
+    <resultMap type="com.yikao.demo.entity.Message" id="MessageMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="myUserId" column="my_user_id" jdbcType="INTEGER"/>
+        <result property="forUserId" column="for_user_id" jdbcType="INTEGER"/>
+        <result property="message" column="message" jdbcType="VARCHAR"/>
+        <result property="createtime" column="createtime" jdbcType="TIMESTAMP"/>
+        <result property="updatetime" column="updatetime" jdbcType="TIMESTAMP"/>
+        <result property="courseid" column="courseid" jdbcType="INTEGER"/>
+        <result property="obj1" column="obj1" jdbcType="VARCHAR"/>
+        <result property="obj2" column="obj2" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="MessageMap">
+        select id,
+               my_user_id,
+               for_user_id,
+               message,
+               createtime,
+               updatetime,
+               courseid,
+               obj1,
+               obj2
+        from yikaodb.message
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="MessageMap">
+        select id,
+               my_user_id,
+               for_user_id,
+               message,
+               createtime,
+               updatetime,
+               courseid,
+               obj1,
+               obj2
+        from yikaodb.message limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="MessageMap">
+        select
+        id, my_user_id, for_user_id, message, createtime, updatetime, courseid, obj1, obj2
+        from yikaodb.message
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="myUserId != null">
+                and my_user_id = #{myUserId}
+            </if>
+            <if test="forUserId != null">
+                and for_user_id = #{forUserId}
+            </if>
+            <if test="message != null and message != ''">
+                and message = #{message}
+            </if>
+            <if test="createtime != null">
+                and createtime = #{createtime}
+            </if>
+            <if test="updatetime != null">
+                and updatetime = #{updatetime}
+            </if>
+            <if test="courseid != null">
+                and courseid = #{courseid}
+            </if>
+            <if test="obj1 != null and obj1 != ''">
+                and obj1 = #{obj1}
+            </if>
+            <if test="obj2 != null and obj2 != ''">
+                and obj2 = #{obj2}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into yikaodb.message(my_user_id, for_user_id, message, createtime, updatetime, courseid, obj1, obj2)
+        values (#{myUserId}, #{forUserId}, #{message}, #{createtime}, #{updatetime}, #{courseid}, #{obj1}, #{obj2})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into yikaodb.message(my_user_id, for_user_id, message, createtime, updatetime, courseid, obj1, obj2)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.myUserId}, #{entity.forUserId}, #{entity.message}, #{entity.createtime}, #{entity.updatetime}, #{entity.courseid}, #{entity.obj1}, #{entity.obj2})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into yikaodb.message(my_user_id, for_user_id, message, createtime, updatetime, courseid, obj1, obj2)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.myUserId}, #{entity.forUserId}, #{entity.message}, #{entity.createtime}, #{entity.updatetime}, #{entity.courseid}, #{entity.obj1}, #{entity.obj2})
+        </foreach>
+        on duplicate key update
+        my_user_id = values(my_user_id) , for_user_id = values(for_user_id) , message = values(message) , createtime = values(createtime) , updatetime = values(updatetime) ,
+        courseid = values(courseid) , obj1 = values(obj1) , obj2 = values(obj2)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update yikaodb.message
+        <set>
+            <if test="myUserId != null">
+                my_user_id = #{myUserId},
+            </if>
+            <if test="forUserId != null">
+                for_user_id = #{forUserId},
+            </if>
+            <if test="message != null and message != ''">
+                message = #{message},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime},
+            </if>
+            <if test="updatetime != null">
+                updatetime = #{updatetime},
+            </if>
+            <if test="courseid != null">
+                courseid = #{courseid},
+            </if>
+            <if test="obj1 != null and obj1 != ''">
+                obj1 = #{obj1},
+            </if>
+            <if test="obj2 != null and obj2 != ''">
+                obj2 = #{obj2},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from yikaodb.message
+        where id = #{id}
+    </delete>
+
+</mapper>
